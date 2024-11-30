@@ -1,0 +1,8 @@
+org\openjfx\auth\SessionManager.class
+module-info.class
+org\openjfx\model\User.class
+org\openjfx\utils\HibernateUtil.class
+org\openjfx\views\Menu.class
+org\openjfx\db\DatabaseTesting.class
+org\openjfx\App.class
+org\openjfx\SystemInfo.class
