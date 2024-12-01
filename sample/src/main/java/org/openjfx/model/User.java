@@ -1,14 +1,17 @@
 package org.openjfx.model;
-
+import org.openjfx.model.Orders;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +30,11 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    // Relación con los pedidos
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Orders> orders = new ArrayList<>();
+
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -37,6 +45,7 @@ public class User {
     private String token;
 
     public User() {
+      
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -95,6 +104,27 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public List<Orders> getPedidos() {
+        return orders;
+    }
+
+    public void setPedidos(List<Orders> orders) {
+        this.orders = orders;
+    }
+
+
+     // Métodos de utilidad
+     public void addPedido(Orders pedido) {
+        orders.add(pedido);
+        orders.setUsuario(this);
+    }
+
+    public void removePedido(Orders pedido) {
+        orders.remove(pedido);
+        pedido.setUsuario(null);
+    }
+
 
     @Override
     public String toString() {

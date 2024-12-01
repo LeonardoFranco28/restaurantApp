@@ -27,6 +27,10 @@
 
     <!-- Names the annotated entity class -->
     <mapping class="org.openjfx.model.User" />
+    <mapping class="org.openjfx.model.MenuItem" />
+    <mapping  class="org.openjfx.model.Orders"/>
+    <mapping class="org.openjfx.model.Details.OrdersDetailds" />
+    <mapping class="org.openjfx.model.StatusOrders"/>
 
   </session-factory>
 </hibernate-configuration>

@@ -7,9 +7,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.openjfx.auth.SessionManager;
+import org.openjfx.controller.MenuController;
+import org.openjfx.model.MenuItem; // Renombrado para evitar conflicto con esta clase
 import org.openjfx.model.User;
+import org.openjfx.views.components.CrearPedidos;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Menu {
+
+    private MenuController menuController;
+
+    public Menu() {
+        this.menuController = new MenuController();
+    }
 
     // Método para mostrar la pantalla principal
     public void mostrarPantallaPrincipal(Stage primaryStage) {
@@ -35,6 +46,10 @@ public class Menu {
             noAccessLabel.setStyle("-fx-text-fill: white;");
             sidebar.getChildren().add(noAccessLabel);
         }
+        Button logoutButton = new Button("Cerrar Sesión");
+        logoutButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        logoutButton.setOnAction(e -> logout(primaryStage));
+        sidebar.getChildren().add(logoutButton);
 
         // Ajustar el ancho del sidebar
         sidebar.setPrefWidth(250);
@@ -43,22 +58,55 @@ public class Menu {
         layout.setLeft(sidebar);
 
         // Crear el área central
+        VBox centerLayout = new VBox(20);
+        centerLayout.setAlignment(Pos.TOP_CENTER);
+        centerLayout.setPadding(new Insets(15));
+
         Label welcomeLabel = new Label("¡Bienvenido al sistema!");
         welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
         Label roleLabel = new Label("Tu rol es: " + (userRole != null ? userRole : "No autenticado"));
         roleLabel.setStyle("-fx-font-size: 16px;");
 
-        VBox centerLayout = new VBox(20);
-        centerLayout.setAlignment(Pos.CENTER);
         centerLayout.getChildren().addAll(welcomeLabel, roleLabel);
+
+        // Obtener la lista de menús desde el controlador
+        List<MenuItem> menus = MenuController.getAllMenus();
+
+        System.out.println("Menus obtenidos: " + menus);
+        // Si la lista está vacía, insertar menús de ejemplo
+        if (menus == null || menus.isEmpty()) {
+            MenuController.insertSampleMenus();
+            menus = MenuController.getAllMenus();
+        }
+
+        // Verificar si 'menus' sigue siendo null para evitar NullPointerException
+        if (menus == null) {
+            System.err.println("La lista de menus es null despues de intentar obtenerlos.");
+            menus = new ArrayList<>(); // Crear una lista vacía para evitar errores
+        }
+
+        // Crear una sección para mostrar los menús
+        Label menuLabel = new Label("Menú Disponible");
+        menuLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        ListView<String> menuListView = new ListView<>();
+
+        for (MenuItem item : menus) {
+            String menuItemString = item.getId() + " - " + item.getName() + " - $" + item.getPrice() + "\n"
+                    + item.getDescription();
+            menuListView.getItems().add(menuItemString);
+        }
+
+        // Agregar el ListView al centro del layout
+        centerLayout.getChildren().addAll(menuLabel, menuListView);
 
         layout.setCenter(centerLayout);
 
         // Crear la escena y aplicar el CSS
         Scene scene = new Scene(layout, 800, 600);
-        
-        //scene.getStylesheets().add(getClass().getResource("Menu.css").toExternalForm());
+
+        // Aplicar estilos CSS si es necesario
+        // scene.getStylesheets().add(getClass().getResource("/styles/Menu.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Sistema de Gestión");
@@ -84,12 +132,15 @@ public class Menu {
         // Agregar eventos a los botones
         registroPedidosBtn.setOnAction(e -> {
             // Lógica para registro de pedidos
+            System.out.println("Registro de pedidos seleccionado");
         });
         gestionPedidosBtn.setOnAction(e -> {
             // Lógica para gestión de pedidos
+            System.out.println("Gestión del pedido seleccionado");
         });
         generacionFacturaBtn.setOnAction(e -> {
             // Lógica para generación de factura
+            System.out.println("Generación de factura seleccionada");
         });
 
         vbox.getChildren().addAll(adminLabel, registroPedidosBtn, gestionPedidosBtn, generacionFacturaBtn);
@@ -100,45 +151,31 @@ public class Menu {
     private VBox crearOpcionesUser() {
         VBox vbox = new VBox(10);
 
-        Label userLabel = new Label("Administración de Catálogos");
+        Label userLabel = new Label("");
         userLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18px;");
 
-        Button clientesBtn = new Button("Clientes");
-        Button reservasBtn = new Button("Reservas");
-        Button platosBtn = new Button("Platos");
-        Button bebidasBtn = new Button("Bebidas");
-        Button salonerosBtn = new Button("Saloneros");
+        Button pedidosBtn = new Button("Pedidos");
+        CrearPedidos crearPedidos = new CrearPedidos();
+       
 
         // Asignar clases CSS a los botones
-        clientesBtn.getStyleClass().add("sidebar-button");
-        reservasBtn.getStyleClass().add("sidebar-button");
-        platosBtn.getStyleClass().add("sidebar-button");
-        bebidasBtn.getStyleClass().add("sidebar-button");
-        salonerosBtn.getStyleClass().add("sidebar-button");
-
+        pedidosBtn.getStyleClass().add("sidebar-button");
+        
         // Agregar eventos a los botones
-        clientesBtn.setOnAction(e -> {
-            // Lógica para administración de clientes
+        pedidosBtn.setOnAction(e -> {
+            // Lógica para la creacion de pedidos
+            crearPedidos.mostrarFormularioNuevoPedido();
         });
-        reservasBtn.setOnAction(e -> {
-            // Lógica para administración de reservas
-        });
-        platosBtn.setOnAction(e -> {
-            // Lógica para administración de platos
-        });
-        bebidasBtn.setOnAction(e -> {
-            // Lógica para administración de bebidas
-        });
-        salonerosBtn.setOnAction(e -> {
-            // Lógica para administración de saloneros
-        });
+       
 
-        vbox.getChildren().addAll(userLabel, clientesBtn, reservasBtn, platosBtn, bebidasBtn, salonerosBtn);
+        vbox.getChildren().addAll(userLabel, pedidosBtn);
         return vbox;
     }
 
     private void logout(Stage primaryStage) {
         SessionManager.clearSession();
         // Redirigir a la pantalla de login o realizar otras acciones necesarias
+        System.out.println("Sesión cerrada");
+        primaryStage.close();
     }
 }

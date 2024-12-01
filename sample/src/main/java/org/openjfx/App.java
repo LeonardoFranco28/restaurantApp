@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.mindrot.jbcrypt.BCrypt;
 import org.openjfx.utils.HibernateUtil;
 import org.openjfx.model.User;
@@ -123,7 +122,9 @@ public class App extends Application {
         // Registrar un nuevo usuario (opcional)
         App app = new App();
         try {
-            app.registrarUsuario("admin", "1234", "ADMIN");
+            
+            //app.registrarUsuario("admin", "1234", "ADMIN");
+            //app.registrarUsuario("user", "1234", "USER");
 
         } catch (Exception e) {
             // TODO: handle exception

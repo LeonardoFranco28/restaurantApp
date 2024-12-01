@@ -9,6 +9,8 @@ module org.openjfx {
     opens org.openjfx to javafx.fxml;
     opens org.openjfx.model to org.hibernate.orm.core;
     opens org.openjfx.views;
+    opens org.openjfx.model.Details to org.hibernate.orm.core;
+
 
     // Exporta paquetes
     exports org.openjfx;
