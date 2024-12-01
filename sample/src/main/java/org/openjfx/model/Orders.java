@@ -51,7 +51,7 @@ public class Orders {
         return user;
     }
 
-    public void setUsuaro(User user) {
+    public void setUsuario(User user) {
         this.user = user;
     }
 

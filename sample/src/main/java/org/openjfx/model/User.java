@@ -31,7 +31,7 @@ public class User {
     private String role;
 
     // Relación con los pedidos
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Orders> orders = new ArrayList<>();
 
 
@@ -117,7 +117,7 @@ public class User {
      // Métodos de utilidad
      public void addPedido(Orders pedido) {
         orders.add(pedido);
-        orders.setUsuario(this);
+        pedido.setUsuario(this);
     }
 
     public void removePedido(Orders pedido) {
